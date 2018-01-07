@@ -1,37 +1,42 @@
-#Activate with bake[x,y]. x,y optional
+#Activate with bake[foodx foody...].
+#Supported foods are [potatoes, pizza]
 
 desc "Prepare food task"
-task :pizza_and_potatoes => [:market] do |task, args|
- Rake::Task["prepare_" + args.food1].execute if args.food1
- Rake::Task["prepare_" + args.food2].execute if args.food2
+task :prepare_food => [:market] do |task, args|
+  args.foods.split.each {|food| Rake::Task["prepare_#{food}"].execute}
 end
 
 desc "Prepare pizza task"
 task :prepare_pizza do
- puts "Creating Dough"
- puts "Putting tomato sauce"
- puts "Adding cheese"
+  puts "Creating Dough"
+  puts "Putting tomato sauce"
+  puts "Adding cheese"
 end
 
 desc "Prepare potatoes task"
 task :prepare_potatoes do
- puts "Peel potatoes"
- puts "Put spices"
+  puts "Peel potatoes"
+  puts "Put spices"
 end
 
 desc "Go to market task"
 task :market do |task, args|
- raise "Nothing to bake" unless args.food1
- puts args.food2 ? "Went to market to buy #{args.food1} and #{args.food2}" : "Went to market to buy #{args.food1}"
+  if args.foods then
+    print "Went to market to buy: "
+    args.foods.split.each_with_index {|food, index|
+      print index != args.foods.split.size - 1 ? "#{food}, " : "#{food}."}
+    puts
+  else
+    raise "Nothing to bake" unless args.foods
+  end
 end
 
 desc "Turn on oven task"
-task :oven => [:pizza_and_potatoes] do
- puts "Turn on oven"
+task :oven => [:prepare_food] do
+  puts "Turn on oven"
 end
 
 desc "Baking task"
-task :bake, [:food1, :food2] => [:oven] do |task, args|
- puts "Put #{args.food1} in oven" if args.food1
- puts "Put #{args.food2} in oven" if args.food2
+task :bake, [:foods] => [:oven] do |task, args|
+  args.foods.split.each {|food| puts "Put #{food} in oven"}
 end
