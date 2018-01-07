@@ -359,3 +359,6 @@ rescue
 ensure
   f.close
 end
+
+# return sorted even members of array
+puts [8,10,1,2,3,4,5,6,4].select {|x| x % 2 == 0}.sort
