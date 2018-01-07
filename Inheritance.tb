@@ -1,0 +1,55 @@
+class ArticleOfClothing
+  attr_reader :material
+  def initialize(size)
+    @size = size
+    update_material("wool")
+  end
+
+  def wear
+    puts "I put on the article of clothing."
+  end
+
+  private
+  def update_material(material)
+    @material = material
+  end
+end
+
+class Pants < ArticleOfClothing
+  attr_reader :size, :cut
+  def initialize(size, cut)
+    @cut = cut
+    super(size)
+  end
+
+  def wear
+    puts "I'm putting on pants!"
+  end
+end
+
+class Shirt < ArticleOfClothing
+  attr_accessor :size, :color
+  def initialize(size, color="white")
+    @color = color
+    super(size)
+  end
+
+  def morph
+    #update_material("cotton")
+    @material = "cotton"
+    wear
+  end
+end
+
+my_shirt = Shirt.new("L")
+my_pants = Pants.new(38, "narrow")
+puts my_pants.size
+puts my_pants.cut
+puts my_shirt.size
+my_shirt.size = "M"
+puts my_shirt.size
+my_pants.wear
+my_shirt.wear
+puts my_shirt.material
+my_shirt.morph
+puts my_shirt.material
